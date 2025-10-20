@@ -56,6 +56,13 @@ class BaseOptions:
         # wandb parameters
         parser.add_argument("--use_wandb", action="store_true", help="if specified, then init wandb logging")
         parser.add_argument("--wandb_project_name", type=str, default="CycleGAN-and-pix2pix", help="specify wandb project name")
+         # 🔹 新增这两行：
+        """ parser.add_argument('--lambda_sym', type=float, default=0.0, help='weight for symmetry loss')
+        parser.add_argument('--lambda_struct', type=float, default=0.0, help='weight for structure consistency loss') """
+        #parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2,  -1 for CPU')
+
+
+
         self.initialized = True
         return parser
 

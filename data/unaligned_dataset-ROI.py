@@ -4,11 +4,11 @@ from data.image_folder import make_dataset
 from PIL import Image
 import random
 import torch
+import numpy as np
 
 class UnalignedDataset(BaseDataset):
     """
-    Dataset class for unaligned/unpaired datasets.
-    This version only supports images (for Edge loss), without ROI masks.
+    Dataset class for unaligned/unpaired datasets, with optional ROI masks.
     """
 
     def __init__(self, opt):
@@ -27,6 +27,7 @@ class UnalignedDataset(BaseDataset):
 
         self.transform_A = get_transform(self.opt, grayscale=(input_nc == 1))
         self.transform_B = get_transform(self.opt, grayscale=(output_nc == 1))
+        self.transform_mask = get_transform(self.opt, grayscale=True)  # mask 总是单通道
 
     def __getitem__(self, index):
         # 图像索引
@@ -45,11 +46,22 @@ class UnalignedDataset(BaseDataset):
         A = self.transform_A(A_img)
         B = self.transform_B(B_img)
 
+        # ROI mask
+        # 默认 ROI 为全 1，你可以替换成你的 ROI mask 图像路径读取
+        A_mask = Image.fromarray(np.ones((A_img.size[1], A_img.size[0]), np.uint8) * 255)
+        B_mask = Image.fromarray(np.ones((B_img.size[1], B_img.size[0]), np.uint8) * 255)
+
+        # 转 tensor
+        A_mask = self.transform_mask(A_mask)
+        B_mask = self.transform_mask(B_mask)
+
         return {
             "A": A,
             "B": B,
             "A_paths": A_path,
-            "B_paths": B_path
+            "B_paths": B_path,
+            "A_mask": A_mask,
+            "B_mask": B_mask
         }
 
     def __len__(self):

@@ -31,9 +31,5 @@ class TrainOptions(BaseOptions):
         parser.add_argument('--lr_policy', type=str, default='linear', help='learning rate policy. [linear | step | plateau | cosine]')
         parser.add_argument('--lr_decay_iters', type=int, default=50, help='multiply by a gamma every lr_decay_iters iterations')
 
-        parser.add_argument('--lambda_ROI', type=float, default=0.0, help='weight for ROI loss')
-        parser.add_argument('--roi_start_epoch', type=int, default=5, help='epoch to start adding ROI loss')
-        parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
-
         self.isTrain = True
         return parser

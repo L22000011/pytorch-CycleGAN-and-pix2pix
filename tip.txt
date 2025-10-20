@@ -1,0 +1,36 @@
+prepare_crop.py：处理文件的图像数据 全部裁剪为474*474的大小
+prepare_and_compare.py：最终处理，将所有的图片全部加载进来，之后分别生成fakeA，B，等数据 还有对比图
+plot_loss.py：绘制损失函数图像
+train_log.py ：训练日志文件
+roc_real_fake.py：绘制ROC图像
+Print.py  绘制ROI结果图
+
+python train_Lsym_Lstruct.py --dataroot ./datasets/IR --name cyclegan_sym_struct --model cycle_gan --batch_size 1 --n_epochs 100 --n_epochs_decay 100
+
+
+脚本：ROI区域测试
+10-18 15:26
+python train.py --dataroot ./datasets/IR --name cyc_roi --model cycle_gan --lambda_ROI 0.1 --roi_start_epoch 0 --n_epochs 200 --n_epochs_decay 0 --gpu_ids 0`
+python test.py --dataroot ./datasets/IR --name cyc_roi --model cycle_gan --phase test --num_test 200
+
+python .\prepare_and_compare.py 收集对比数据
+python .\allFID.py 计算FID分数
+python .\FID.py    计算SSIM，PSNR等指标
+python .\ROI_hand.py 绘制手部关节部位打点相似度
+
+python train.py --dataroot ./datasets/IR --name cyc_roi --model cycle_gan --lambda_ROI 0.2 --roi_start_epoch 0 --n_epochs 200 --n_epochs_decay 0 --gpu_ids 0`
+python test.py --dataroot ./datasets/IR --name cyc_roi --model cycle_gan --phase test --num_test 200
+
+python train.py --dataroot ./datasets/IR --name cyc_roi --model cycle_gan --lambda_ROI 0.5 --roi_start_epoch 0 --n_epochs 200 --n_epochs_decay 0 --gpu_ids 0`
+python test.py --dataroot ./datasets/IR --name cyc_roi --model cycle_gan --phase test --num_test 200
+
+python train.py --dataroot ./datasets/IR --name cyc_roi --model cycle_gan --lambda_ROI 0.05 --roi_start_epoch 0 --n_epochs 200 --n_epochs_decay 0 --gpu_ids 0`
+python test.py --dataroot ./datasets/IR --name cyc_roi --model cycle_gan --phase test --num_test 200
+
+
+
+脚本：Edge区域测试
+python train.py --name cyc_edge --model cycle_gan --dataset_mode unaligned --dataroot ./datasets/IR --netG resnet_9blocks --netD basic --lambda_edge 2.0 --epoch_count 1 --n_epochs 10 --n_epochs_decay 0
+python train.py --name cyc_edge --model cycle_gan --dataset_mode unaligned --dataroot ./datasets/IR --netG resnet_9blocks --netD basic --lambda_edge 2.0 --epoch_count 1 --n_epochs 200 --n_epochs_decay 0 --batch_size 1 --load_size 256 --crop_size 256 --num_threads 0
+
+python test.py --dataroot ./datasets/IR --name cyc_edge --model cycle_gan --phase test --num_test 200

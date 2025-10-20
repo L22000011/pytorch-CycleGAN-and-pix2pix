@@ -34,7 +34,9 @@ class BaseModel(ABC):
         self.opt = opt
         self.isTrain = opt.isTrain
         self.save_dir = Path(opt.checkpoints_dir) / opt.name  # save all the checkpoints to save_dir
-        self.device = opt.device
+        #self.device = opt.device  此处修改为下一行  2025-09-24
+        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
         # with [scale_width], input images might have different sizes, which hurts the performance of cudnn.benchmark.
         if opt.preprocess != "scale_width":
             torch.backends.cudnn.benchmark = True
